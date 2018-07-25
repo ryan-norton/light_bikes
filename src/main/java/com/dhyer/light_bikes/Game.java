@@ -104,19 +104,20 @@ public class Game {
     return false;
   }
 
-  public void updatePlayerLocation(Player p, int x, int y) {
+
+  public void updatePlayerLocation(Player p, int x, int y, GameStore gameStore) {
     if(Math.abs(x - p.getCurrentX()) + Math.abs(y - p.getCurrentY()) > 1) {
-      killPlayer(p);
+      killPlayer(p, gameStore);
       throw new InvalidRequestException("You can only move a maximum of 1 space per turn");
     } else if(x >= BOARD_SIZE || x < 0 || y >= BOARD_SIZE || y < 0) {
-      killPlayer(p);
+      killPlayer(p, gameStore);
       throw new InvalidRequestException("You must stay on the board");
     }
 
     p.updateCurrentLocation(x, y);
 
     if(this.board[x][y] != null) {
-      killPlayer(p);
+      killPlayer(p, gameStore);
     } else {
       this.board[x][y] = p.getColor();
       // TODO: this won't work if there are more than 2 players in a game
@@ -128,12 +129,17 @@ public class Game {
     }
   }
 
-  public void killPlayer(Player player) {
+  public void killPlayer(Player player, GameStore gameStore) {
     player.kill();
 
     Collection<Player> alivePlayers = Collections2.filter(this.players, Player::isAlive);
     if (alivePlayers.size() == 1) {
       this.winner = Iterables.get(alivePlayers, 0).getColor();
+      // kill the game after 30 seconds
+      new java.util.Timer().schedule(
+          new KillGameTask(gameStore, this.id),
+          30000
+      );
     }
   }
 }

@@ -20,6 +20,14 @@ public class GameStore {
   public Map<UUID, Game> getGames() {
     return this.games;
   }
+
+  public void removeGame(UUID id) {
+    this.games.remove(id);
+  }
+
+  public void clear() {
+    this.games.clear();
+  }
 }
 
 

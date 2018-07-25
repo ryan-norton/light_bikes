@@ -1,6 +1,5 @@
 package com.dhyer.light_bikes;
 
-import com.fasterxml.jackson.databind.util.JSONWrappedObject;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +22,19 @@ public class GamesController {
     for (Game g : gameStore.getGames().values()) {
       arr.add(g.toJson());
     }
+    obj.put("games", arr);
+    return obj;
+  }
+
+  @GetMapping("/{gameId}")
+  public JSONObject show(@PathVariable UUID gameId) {
+    Game game = gameStore.findById(gameId);
+    if(game == null) {
+      throw new ResourceNotFoundException("Game not found with id " + gameId);
+    }
+    JSONObject obj = new JSONObject();
+    JSONArray arr = new JSONArray();
+    arr.add(game.toJson());
     obj.put("games", arr);
     return obj;
   }
@@ -68,12 +80,18 @@ public class GamesController {
     } else if(!game.hasStarted()) {
       throw new InvalidRequestException("The game has not started yet");
     } else if(!game.isPlayersTurn(playerId)) {
-      game.killPlayer(game.getPlayer(playerId));
+      game.killPlayer(game.getPlayer(playerId), gameStore);
       throw new InvalidRequestException("It is not your turn");
     }
-    game.updatePlayerLocation(game.getPlayer(playerId), x, y);
+    game.updatePlayerLocation(game.getPlayer(playerId), x, y, gameStore);
     JSONObject obj = new JSONObject();
     obj.put("game", game.toJson());
     return obj;
+  }
+
+  @DeleteMapping
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void clearGames() {
+    gameStore.clear();
   }
 }
