@@ -1,0 +1,42 @@
+buildscript {
+	ext {
+    commonsLangVersion = '3.7'
+    guavaVersion = '25.1-jre'
+    jsonSimpleVersion = '1.1.1'
+		springBootVersion = '2.0.3.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+bootJar {
+	baseName = 'gs-spring-boot'
+	version = '0.1.0'
+}
+
+group = 'com.dhyer'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+  compile("com.google.guava:guava:$guavaVersion")
+  compile("com.googlecode.json-simple:json-simple:$jsonSimpleVersion")
+  compile("org.apache.commons:commons-lang3:$commonsLangVersion")
+	compile('org.springframework.boot:spring-boot-starter-web')
+	testCompile('junit:junit')
+}
