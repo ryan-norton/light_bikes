@@ -1,5 +1,7 @@
 package com.dhyer.light_bikes;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +14,15 @@ import java.util.UUID;
 @RequestMapping("/games")
 public class GamesController {
 
+  private static final Logger log = LoggerFactory.getLogger(GamesController.class);
+
   @Autowired
   GameStore gameStore;
 
   @GetMapping
   public JSONObject index() {
+    log.info("Requesting all the games!");
+
     JSONObject obj = new JSONObject();
     JSONArray arr = new JSONArray();
     for (Game g : gameStore.getGames().values()) {
@@ -28,6 +34,8 @@ public class GamesController {
 
   @GetMapping("/{gameId}")
   public JSONObject show(@PathVariable UUID gameId) {
+    log.info("Requesting game ID " + gameId);
+
     Game game = gameStore.findById(gameId);
     if(game == null) {
       throw new ResourceNotFoundException("Game not found with id " + gameId);
@@ -45,6 +53,9 @@ public class GamesController {
     Game game = new Game();
     gameStore.addGame(game);
     JSONObject obj = new JSONObject();
+
+    log.info("Created game with ID " + game.getId());
+
     obj.put("id", game.getId());
     return obj;
   }
@@ -52,10 +63,14 @@ public class GamesController {
   @PostMapping("/{gameId}/join")
   public JSONObject joinGame(@PathVariable UUID gameId,
                              @RequestParam(required = true) String name) {
+    log.info(name + " is joining game " + gameId);
+
     Game game = gameStore.findById(gameId);
     if(game == null) {
+      log.warn("Game does not exist with id " + gameId);
       throw new ResourceNotFoundException("Game not found with id " + gameId);
     } else if (game.hasStarted()) {
+      log.warn("Game " + gameId + " is not available");
       throw new InvalidRequestException("The game you attempted to join has already started.");
     }
     JSONObject obj = new JSONObject();
@@ -72,6 +87,15 @@ public class GamesController {
                          @RequestParam("id") UUID playerId,
                          @RequestParam("x") int x,
                          @RequestParam("y") int y) {
+    log.info(
+      String.format(
+        "Player %s, in Game %s is moving to %d-%d",
+        playerId,
+        gameId,
+        x, y
+      )
+    );
+
     Game game = gameStore.findById(gameId);
     if(game == null) {
       throw new ResourceNotFoundException("Game not found with id " + gameId);
@@ -92,6 +116,8 @@ public class GamesController {
   @DeleteMapping
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void clearGames() {
+    log.info("Clearing all games!!!");
+
     gameStore.clear();
   }
 }
