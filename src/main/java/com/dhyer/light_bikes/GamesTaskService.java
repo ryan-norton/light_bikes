@@ -23,8 +23,6 @@ public class GamesTaskService {
   // been updated in 120 seconds
   @Scheduled(fixedDelay = 10000)
   public void killOldGames() {
-    log.info("Looking for games to kill...");
-
     Collection<UUID> doomedIds = gameStore
       .getGames()
       .stream()
