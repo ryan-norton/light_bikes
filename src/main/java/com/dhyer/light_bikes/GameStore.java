@@ -4,29 +4,46 @@ import java.util.*;
 
 public class GameStore {
   private Map<UUID, Game> games;
+  private final Object lock = new Object();
 
   GameStore() {
     this.games = new HashMap<>();
   }
 
   public void addGame(Game game) {
-    this.games.put(game.getId(), game);
+    synchronized(lock) {
+      this.games.put(game.getId(), game);
+    }
   }
 
   public Game findById(UUID id) {
-    return this.games.get(id);
+    synchronized(lock) {
+      return this.games.get(id);
+    }
   }
 
-  public Map<UUID, Game> getGames() {
-    return this.games;
+  public Collection<Game> getGames() {
+    synchronized(lock) {
+      return this.games.values();
+    }
   }
 
   public void removeGame(UUID id) {
-    this.games.remove(id);
+    synchronized(lock) {
+      this.games.remove(id);
+    }
+  }
+
+  public void removeGames(Collection<UUID> ids) {
+    synchronized(lock) {
+      ids.forEach(id -> this.games.remove(id));
+    }
   }
 
   public void clear() {
-    this.games.clear();
+    synchronized(lock) {
+      this.games.clear();
+    }
   }
 }
 

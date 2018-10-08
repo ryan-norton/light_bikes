@@ -8,6 +8,7 @@ import org.json.simple.JSONObject;
 
 import java.awt.*;
 import java.util.*;
+import java.time.*;
 
 public class Game {
   private static final int PLAYER_LIMIT = 2;
@@ -18,6 +19,7 @@ public class Game {
   private Player currentPlayer;
   private boolean started;
   private String winner;
+  private LocalTime lastUpdated;
 
   Game() {
     this.id = UUID.randomUUID();
@@ -25,6 +27,7 @@ public class Game {
     this.players = new ArrayList<>();
     this.started = false;
     this.winner = null;
+    this.lastUpdated = LocalTime.now();
   }
 
   public UUID getId() {
@@ -141,5 +144,12 @@ public class Game {
           30000
       );
     }
+  }
+
+  public boolean hasExpired() {
+    int expirationPeriod = this.started ? 30 : 120;
+    return this.lastUpdated
+      .plusSeconds(expirationPeriod)
+      .isBefore(LocalTime.now());
   }
 }
