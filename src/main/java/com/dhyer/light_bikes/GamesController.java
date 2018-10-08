@@ -38,7 +38,8 @@ public class GamesController {
   }
 
   @PostMapping("/{gameId}/join")
-  public JSONObject joinGame(@PathVariable UUID gameId) {
+  public JSONObject joinGame(@PathVariable UUID gameId,
+                             @RequestParam(required = true) String name) {
     Game game = gameStore.findById(gameId);
     if(game == null) {
       throw new ResourceNotFoundException("Game not found with id " + gameId);
@@ -46,9 +47,10 @@ public class GamesController {
       throw new InvalidRequestException("The game you attempted to join has already started.");
     }
     JSONObject obj = new JSONObject();
-    Player p = new Player(game);
+    Player p = new Player(game, name);
     game.addPlayer(p);
     obj.put("id", p.getId());
+    obj.put("name", p.getName());
     obj.put("color", p.getColor());
     return obj;
   }

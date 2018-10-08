@@ -10,6 +10,7 @@ import java.util.UUID;
 public class Player {
   private boolean alive;
   private String color;
+  private String name;
   private int currentX;
   private int currentY;
 
@@ -18,10 +19,11 @@ public class Player {
   private Game game;
   private static final String[] COLORS = {"red", "blue", "green", "yellow"};
 
-  Player(Game game) {
+  Player(Game game, String name) {
     this.id = UUID.randomUUID();
     this.game = game;
     this.alive = true;
+    this.name = name;
     this.color = game.getAvailableColor(COLORS);
 
     // gets starting point, and updates board with position
@@ -34,12 +36,17 @@ public class Player {
     return this.id;
   }
 
+  public String getName() {
+    return this.name;
+  }
+
   public String getColor() {
     return this.color;
   }
 
   public JSONObject toJson() {
     JSONObject obj = new JSONObject();
+    obj.put("name", this.name);
     obj.put("color", this.color);
     obj.put("alive", this.alive);
     obj.put("x", this.currentX);
