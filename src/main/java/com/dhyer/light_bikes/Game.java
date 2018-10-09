@@ -16,6 +16,7 @@ public class Game {
   private static final int PLAYER_LIMIT = 2;
   public static final int BOARD_SIZE = 25;
   public static final int TURN_TIME_LIMIT_MS = 5000;
+
   private UUID id;
   private String[][] board;
   private ArrayList<Player> players;
@@ -26,6 +27,8 @@ public class Game {
 
   @JsonIgnore
   private boolean hasBotPlayer;
+
+  private final Object playerLock = new Object();
 
   Game(boolean isTest, GameStore gameStore) {
     this.id = UUID.randomUUID();
@@ -53,30 +56,6 @@ public class Game {
     return this.winner;
   }
 
-  public void addPlayer(Player player, GameStore gameStore) {
-    this.players.add(player);
-
-    if(this.players.size() == PLAYER_LIMIT) {
-      this.started = true;
-
-      // Choose a random player to be first
-      this.currentPlayer = this.players.get(new Random().nextInt(PLAYER_LIMIT));
-
-      // If the starting player is a bot, move them now and advance the current player
-      // TODO: Make this work with > 2 players
-      if (this.currentPlayer.isBot) {
-        BotPlayer bp = (BotPlayer) this.currentPlayer;
-        bp.move(gameStore);
-
-        for(Player p : this.players) {
-          if(!p.equals(player)) {
-            this.currentPlayer = player;
-          }
-        }
-      }
-    }
-  }
-
   public JSONObject toJson() {
     JSONObject obj = new JSONObject();
     obj.put("id", this.id);
@@ -98,25 +77,55 @@ public class Game {
     return obj;
   }
 
-  public String getAvailableColor(String[] colors) {
-    for (Player p : this.players) {
-      if(p != null) {
-        colors = ArrayUtils.removeElement(colors, p.getColor());
+  public void addPlayer(Player player, GameStore gameStore) {
+    synchronized(playerLock) {
+      this.players.add(player);
+
+      if(this.players.size() == PLAYER_LIMIT) {
+        this.started = true;
+
+        // Choose a random player to be first
+        this.currentPlayer = this.players.get(new Random().nextInt(PLAYER_LIMIT));
+
+        // If the starting player is a bot, move them now and advance the current player
+        // TODO: Make this work with > 2 players
+        if (this.currentPlayer.isBot) {
+          BotPlayer bp = (BotPlayer) this.currentPlayer;
+          bp.move(gameStore);
+
+          for(Player p : this.players) {
+            if(!p.equals(player)) {
+              this.currentPlayer = player;
+            }
+          }
+        }
       }
     }
-    return colors[new Random().nextInt(colors.length)];
+  }
+
+  public String getAvailableColor(String[] colors) {
+    synchronized(playerLock) {
+      for (Player p : this.players) {
+        if(p != null) {
+          colors = ArrayUtils.removeElement(colors, p.getColor());
+        }
+      }
+      return colors[new Random().nextInt(colors.length)];
+    }
   }
 
   public Point getAvailableStartingPoint(String color) {
-    // First player starts in top left. Second player starts in bottom right
-    Point p;
-    if(this.board[0][0] == null) {
-      p = new Point(0, 0);
-    } else {
-      p = new Point(this.board.length - 1, this.board.length - 1);
+    synchronized(playerLock) {
+      // First player starts in top left. Second player starts in bottom right
+      Point p;
+      if(this.board[0][0] == null) {
+        p = new Point(0, 0);
+      } else {
+        p = new Point(this.board.length - 1, this.board.length - 1);
+      }
+      this.board[p.x][p.y] = color;
+      return p;
     }
-    this.board[p.x][p.y] = color;
-    return p;
   }
 
   public boolean hasPlayer(UUID playerId) {
