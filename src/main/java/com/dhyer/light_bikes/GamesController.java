@@ -21,6 +21,7 @@ public class GamesController {
   @Autowired
   GameStore gameStore;
 
+  @CrossOrigin(origins = "http://localhost:3001")
   @GetMapping
   public JSONObject index() {
     log.info("Requesting all the games!");
