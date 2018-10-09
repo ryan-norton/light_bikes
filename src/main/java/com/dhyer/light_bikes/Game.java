@@ -10,10 +10,12 @@ import org.json.simple.JSONObject;
 import java.awt.*;
 import java.util.*;
 import java.time.*;
+import java.time.temporal.*;
 
 public class Game {
   private static final int PLAYER_LIMIT = 2;
   public static final int BOARD_SIZE = 25;
+  public static final int TURN_TIME_LIMIT_MS = 5000;
   private UUID id;
   private String[][] board;
   private ArrayList<Player> players;
@@ -134,6 +136,10 @@ public class Game {
     return this.started;
   }
 
+  public boolean isActive() {
+    return this.started && this.winner == null;
+  }
+
   public String[][] getBoard() {
     return board;
   }
@@ -185,6 +191,12 @@ public class Game {
     int expirationPeriod = this.started ? 30 : 120;
     return this.lastUpdated
       .plusSeconds(expirationPeriod)
+      .isBefore(LocalTime.now());
+  }
+
+  public boolean hasTurnExpired() {
+    return this.lastUpdated
+      .plus(TURN_TIME_LIMIT_MS, ChronoUnit.MILLIS)
       .isBefore(LocalTime.now());
   }
 }

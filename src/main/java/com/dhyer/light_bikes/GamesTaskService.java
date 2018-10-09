@@ -35,4 +35,25 @@ public class GamesTaskService {
       gameStore.removeGames(doomedIds);
     }
   }
+
+  // Runs every 0.5 seconds
+  // Kills players that the server has been waiting on for > Game.TURN_TIME_LIMIT_MS
+  @Scheduled(fixedDelay = 500)
+  public void killSlowPlayers() {
+    Collection<Game> activeGames = gameStore
+      .getGames()
+      .stream()
+      .filter(g -> g.isActive())
+      .collect(toList());
+
+    for (Game game : activeGames) {
+      if (game.hasTurnExpired()) {
+        Player doomed = game.getCurrentPlayer();
+
+        log.info(String.format("Killing player %s (%s) for taking too long to play their turn!", doomed.getName(), doomed.getId()));
+
+        game.killPlayer(doomed, gameStore);
+      }
+    }
+  }
 }

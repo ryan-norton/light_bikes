@@ -57,7 +57,11 @@ public class GamesController {
     gameStore.addGame(game);
     JSONObject obj = new JSONObject();
 
-    log.info("Created game with ID " + game.getId());
+    if (test) {
+      log.info("Created game against test bot with ID " + game.getId());
+    } else {
+      log.info("Created game with ID " + game.getId());
+    }
 
     obj.put("id", game.getId());
     return obj;
