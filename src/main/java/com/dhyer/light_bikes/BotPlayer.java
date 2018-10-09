@@ -1,8 +1,12 @@
 package com.dhyer.light_bikes;
 
+import java.awt.*;
+
 public class BotPlayer extends Player {
-  BotPlayer(Game game) {
-    super(game, "Light Bikes Bot", true);
+  BotPlayer(Game game, String color, Point p) {
+    super(game, "Light Bikes Bot", color, p);
+
+    this.isBot = true;
   }
 
   public void move(GameStore gameStore) {

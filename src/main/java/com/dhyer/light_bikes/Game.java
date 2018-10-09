@@ -13,9 +13,11 @@ import java.time.*;
 import java.time.temporal.*;
 
 public class Game {
-  private static final int PLAYER_LIMIT = 2;
   public static final int BOARD_SIZE = 25;
   public static final int TURN_TIME_LIMIT_MS = 5000;
+
+  private static final int PLAYER_LIMIT = 2;
+  private static final String[] COLORS = {"red", "blue", "green", "yellow"};
 
   private UUID id;
   private String[][] board;
@@ -28,18 +30,30 @@ public class Game {
   @JsonIgnore
   private boolean hasBotPlayer;
 
+  private ArrayList<Point> startingPoints;
+
   private final Object playerLock = new Object();
 
   Game(boolean isTest, GameStore gameStore) {
     this.id = UUID.randomUUID();
     this.board = new String[BOARD_SIZE][BOARD_SIZE];
     this.players = new ArrayList<>();
+    this.startingPoints = new ArrayList<>();
     this.started = false;
     this.winner = null;
     this.lastUpdated = LocalTime.now();
 
+    generateStartingPoints();
+
     if(isTest) {
-      addPlayer(new BotPlayer(this), gameStore);
+      String color = getAvailableColor();
+      Player bot = new BotPlayer(
+        this,
+        color,
+        getAvailableStartingPoint(color)
+      );
+
+      this.players.add(bot);
       this.hasBotPlayer = true;
     }
   }
@@ -77,8 +91,16 @@ public class Game {
     return obj;
   }
 
-  public void addPlayer(Player player, GameStore gameStore) {
+  public Player addPlayer(String name, GameStore gameStore) {
     synchronized(playerLock) {
+      String color = getAvailableColor();
+      Player player = new Player(
+        this,
+        name,
+        color,
+        getAvailableStartingPoint(color)
+      );
+
       this.players.add(player);
 
       if(this.players.size() == PLAYER_LIMIT) {
@@ -100,32 +122,29 @@ public class Game {
           }
         }
       }
+
+      return player;
     }
   }
 
-  public String getAvailableColor(String[] colors) {
-    synchronized(playerLock) {
-      for (Player p : this.players) {
-        if(p != null) {
-          colors = ArrayUtils.removeElement(colors, p.getColor());
-        }
+  public String getAvailableColor() {
+    ArrayList<String> colors = new ArrayList(Arrays.asList(COLORS));
+
+    for (Player p : this.players) {
+      if(p != null) {
+        colors.remove(p.getColor());
       }
-      return colors[new Random().nextInt(colors.length)];
     }
+
+    return colors.get(new Random().nextInt(colors.size()));
   }
 
   public Point getAvailableStartingPoint(String color) {
-    synchronized(playerLock) {
-      // First player starts in top left. Second player starts in bottom right
-      Point p;
-      if(this.board[0][0] == null) {
-        p = new Point(0, 0);
-      } else {
-        p = new Point(this.board.length - 1, this.board.length - 1);
-      }
-      this.board[p.x][p.y] = color;
-      return p;
-    }
+    Point p = this.startingPoints.get(new Random().nextInt(this.startingPoints.size()));
+    this.startingPoints.remove(p);
+    this.board[p.x][p.y] = color;
+
+    return p;
   }
 
   public boolean hasPlayer(UUID playerId) {
@@ -208,4 +227,36 @@ public class Game {
       .plus(TURN_TIME_LIMIT_MS, ChronoUnit.MILLIS)
       .isBefore(LocalTime.now());
   }
+
+  private void generateStartingPoints() {
+    int length = this.board.length;
+    int halfLength = length / 2;
+
+    startingPoints.clear();
+    switch (new Random().nextInt(2)) {
+      // Corners
+      case 0:
+        startingPoints.add(new Point(0, 0));
+        startingPoints.add(new Point(0, length - 1));
+        startingPoints.add(new Point(length - 1, 0));
+        startingPoints.add(new Point(length - 1, length - 1));
+        break;
+
+        // Center-Edge
+      case 1:
+        startingPoints.add(new Point(0, halfLength));
+        startingPoints.add(new Point(length - 1, halfLength));
+        startingPoints.add(new Point(halfLength, 0));
+        startingPoints.add(new Point(halfLength, length - 1));
+        break;
+
+        // Center(ish) of Arena
+      case 2:
+        startingPoints.add(new Point(halfLength, halfLength));
+        startingPoints.add(new Point(halfLength, halfLength + 1));
+        startingPoints.add(new Point(halfLength + 1, halfLength));
+        startingPoints.add(new Point(halfLength + 1, halfLength + 1));
+        break;
+    }
+  } 
 }

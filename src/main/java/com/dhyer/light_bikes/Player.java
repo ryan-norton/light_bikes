@@ -16,20 +16,15 @@ public class Player {
   @JsonIgnore
   private UUID id;
   private Game game;
-  private static final String[] COLORS = {"red", "blue", "green", "yellow"};
   boolean isBot;
 
-  Player(Game game, String name, boolean isBot) {
+  Player(Game game, String name, String color, Point p) {
     this.id = UUID.randomUUID();
     this.name = name;
     this.game = game;
     this.alive = true;
     this.name = name;
-    this.color = game.getAvailableColor(COLORS);
-    this.isBot = isBot;
-
-    // gets starting point, and updates board with position
-    Point p = game.getAvailableStartingPoint(color);
+    this.color = color;
     this.currentX = p.x;
     this.currentY = p.y;
   }

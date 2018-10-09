@@ -82,9 +82,7 @@ public class GamesController {
       throw new InvalidRequestException("The game you attempted to join has already started.");
     }
 
-    Player p = new Player(game, name, false);
-    game.addPlayer(p, gameStore);
-
+    Player p = game.addPlayer(name, gameStore);
     log.info(name + " joined as " + p.getId());
 
     Flux<JSONObject> dynamicFlux = Flux.create(sink -> {
