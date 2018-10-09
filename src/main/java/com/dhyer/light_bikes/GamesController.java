@@ -48,8 +48,10 @@ public class GamesController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public JSONObject create() {
-    Game game = new Game();
+  public JSONObject create(
+      @RequestParam(value = "test", required = false, defaultValue = "false") boolean test
+  ) {
+    Game game = new Game(test, gameStore);
     gameStore.addGame(game);
     JSONObject obj = new JSONObject();
 
@@ -73,8 +75,8 @@ public class GamesController {
       throw new InvalidRequestException("The game you attempted to join has already started.");
     }
     JSONObject obj = new JSONObject();
-    Player p = new Player(game, name);
-    game.addPlayer(p);
+    Player p = new Player(game, name, false);
+    game.addPlayer(p, gameStore);
     obj.put("id", p.getId());
     obj.put("name", p.getName());
     obj.put("color", p.getColor());

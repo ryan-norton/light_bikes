@@ -7,9 +7,9 @@ import java.awt.*;
 import java.util.UUID;
 
 public class Player {
+  private String name;
   private boolean alive;
   private String color;
-  private String name;
   private int currentX;
   private int currentY;
 
@@ -17,13 +17,16 @@ public class Player {
   private UUID id;
   private Game game;
   private static final String[] COLORS = {"red", "blue", "green", "yellow"};
+  boolean isBot;
 
-  Player(Game game, String name) {
+  Player(Game game, String name, boolean isBot) {
     this.id = UUID.randomUUID();
+    this.name = name;
     this.game = game;
     this.alive = true;
     this.name = name;
     this.color = game.getAvailableColor(COLORS);
+    this.isBot = isBot;
 
     // gets starting point, and updates board with position
     Point p = game.getAvailableStartingPoint(color);
@@ -64,6 +67,8 @@ public class Player {
   public void updateCurrentLocation(int x, int y) {
     this.currentX = x;
     this.currentY = y;
+
+    this.game.updateBoard(x, y, this.getColor());
   }
 
   public void kill() {
@@ -72,5 +77,9 @@ public class Player {
 
   public boolean isAlive() {
     return alive;
+  }
+
+  public Game getGame() {
+    return game;
   }
 }

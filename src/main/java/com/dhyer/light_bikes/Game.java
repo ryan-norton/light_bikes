@@ -1,5 +1,6 @@
 package com.dhyer.light_bikes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import org.apache.commons.lang3.ArrayUtils;
@@ -12,7 +13,7 @@ import java.time.*;
 
 public class Game {
   private static final int PLAYER_LIMIT = 2;
-  private static final int BOARD_SIZE = 25;
+  public static final int BOARD_SIZE = 25;
   private UUID id;
   private String[][] board;
   private ArrayList<Player> players;
@@ -21,26 +22,49 @@ public class Game {
   private String winner;
   private LocalTime lastUpdated;
 
-  Game() {
+  @JsonIgnore
+  private boolean hasBotPlayer;
+
+  Game(boolean isTest, GameStore gameStore) {
     this.id = UUID.randomUUID();
     this.board = new String[BOARD_SIZE][BOARD_SIZE];
     this.players = new ArrayList<>();
     this.started = false;
     this.winner = null;
     this.lastUpdated = LocalTime.now();
+
+    if(isTest) {
+      addPlayer(new BotPlayer(this), gameStore);
+      this.hasBotPlayer = true;
+    }
   }
 
   public UUID getId() {
     return this.id;
   }
 
-  public void addPlayer(Player p) {
+  public void addPlayer(Player player, GameStore gameStore) {
     if(this.players.size() == 0) {
-      this.currentPlayer = p;
+      this.currentPlayer = player;
     }
-    this.players.add(p);
+    this.players.add(player);
     if(this.players.size() == PLAYER_LIMIT) {
       this.started = true;
+
+      /*
+      * Start the game by moving all bots and assigning the
+      * new current player.
+      * */
+      if(this.hasBotPlayer) {
+        for(Player p : this.players) {
+          if(p.isBot) {
+            BotPlayer bp = (BotPlayer) p;
+            bp.move(gameStore);
+          } else {
+            this.currentPlayer = p;
+          }
+        }
+      }
     }
   }
 
@@ -98,6 +122,10 @@ public class Game {
     return this.started;
   }
 
+  public String[][] getBoard() {
+    return board;
+  }
+
   public boolean isPlayersTurn(UUID playerId) {
     for(Player p : this.players) {
       if(playerId.equals(p.getId()) && p.equals(this.currentPlayer)) {
@@ -117,19 +145,25 @@ public class Game {
       throw new InvalidRequestException("You must stay on the board");
     }
 
-    p.updateCurrentLocation(x, y);
-
     if(this.board[x][y] != null) {
       killPlayer(p, gameStore);
     } else {
-      this.board[x][y] = p.getColor();
+      p.updateCurrentLocation(x, y);
       // TODO: this won't work if there are more than 2 players in a game
       for(Player player : this.players) {
-        if(!p.equals(player)) {
+        // move all bots, pick next currentPlayer
+        if(player.isBot) {
+          BotPlayer bp = (BotPlayer) player;
+          bp.move(gameStore);
+        } else if(!p.equals(player)) {
           this.currentPlayer = player;
         }
       }
     }
+  }
+
+  public void updateBoard(int x, int y, String color) {
+    this.board[x][y] = color;
   }
 
   public void killPlayer(Player player, GameStore gameStore) {
