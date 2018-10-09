@@ -1,5 +1,7 @@
 package com.dhyer.light_bikes;
 
+import java.awt.*;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.json.simple.JSONArray;
@@ -26,9 +28,12 @@ public class GamesController {
   public JSONObject index() {
     log.info("Requesting all the games!");
 
+    ArrayList<Game> games = new ArrayList(gameStore.getGames());
+    Collections.sort(games, new GameSortByCreated());
+
     JSONObject obj = new JSONObject();
     JSONArray arr = new JSONArray();
-    gameStore.getGames().forEach( g -> arr.add(g.toJson()) );
+    games.forEach( g -> arr.add(g.toJson()) );
 
     obj.put("games", arr);
     return obj;

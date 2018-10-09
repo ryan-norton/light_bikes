@@ -25,6 +25,7 @@ public class Game {
   private Player currentPlayer;
   private boolean started;
   private String winner;
+  private LocalTime createdAt;
   private LocalTime lastUpdated;
 
   @JsonIgnore
@@ -41,7 +42,8 @@ public class Game {
     this.startingPoints = new ArrayList<>();
     this.started = false;
     this.winner = null;
-    this.lastUpdated = LocalTime.now();
+    this.createdAt = LocalTime.now();
+    this.lastUpdated = this.createdAt;
 
     generateStartingPoints();
 
@@ -60,6 +62,10 @@ public class Game {
 
   public UUID getId() {
     return this.id;
+  }
+
+  public LocalTime getCreatedAt() {
+    return this.createdAt;
   }
 
   public Player getCurrentPlayer() {
