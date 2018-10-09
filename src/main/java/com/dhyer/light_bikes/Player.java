@@ -46,13 +46,19 @@ public class Player {
     return this.color;
   }
 
-  public JSONObject toJson() {
+  public JSONObject toJson() { return toJson(false); }
+  public JSONObject toJson(boolean includeId) {
     JSONObject obj = new JSONObject();
     obj.put("name", this.name);
     obj.put("color", this.color);
     obj.put("alive", this.alive);
     obj.put("x", this.currentX);
     obj.put("y", this.currentY);
+
+    if (includeId) {
+      obj.put("id", this.id);
+    }
+
     return obj;
   }
 

@@ -38,5 +38,6 @@ dependencies {
   compile("com.googlecode.json-simple:json-simple:$jsonSimpleVersion")
   compile("org.apache.commons:commons-lang3:$commonsLangVersion")
 	compile('org.springframework.boot:spring-boot-starter-web')
+  compile('org.springframework.boot:spring-boot-starter-webflux')
 	testCompile('junit:junit')
 }

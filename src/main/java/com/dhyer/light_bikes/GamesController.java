@@ -7,6 +7,8 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.*;
+import reactor.core.publisher.*;
 
 import java.util.UUID;
 
@@ -62,7 +64,7 @@ public class GamesController {
   }
 
   @PostMapping("/{gameId}/join")
-  public JSONObject joinGame(@PathVariable UUID gameId,
+  public Flux<JSONObject> joinGame(@PathVariable UUID gameId,
                              @RequestParam(required = true) String name) {
     log.info(name + " is joining game " + gameId);
 
@@ -74,17 +76,20 @@ public class GamesController {
       log.warn("Game " + gameId + " is not available");
       throw new InvalidRequestException("The game you attempted to join has already started.");
     }
-    JSONObject obj = new JSONObject();
+
     Player p = new Player(game, name, false);
     game.addPlayer(p, gameStore);
-    obj.put("id", p.getId());
-    obj.put("name", p.getName());
-    obj.put("color", p.getColor());
-    return obj;
+
+    log.info(name + " joined as " + p.getId());
+
+    Flux<JSONObject> dynamicFlux = Flux.create(sink -> {
+      GameWatcher.waitForTurn(sink, gameStore, gameId, p.getId());
+    });
+    return dynamicFlux;
   }
 
   @PostMapping("/{gameId}/move")
-  public JSONObject move(@PathVariable UUID gameId,
+  public Flux<JSONObject> move(@PathVariable UUID gameId,
                          @RequestParam("id") UUID playerId,
                          @RequestParam("x") int x,
                          @RequestParam("y") int y) {
@@ -104,14 +109,19 @@ public class GamesController {
       throw new InvalidRequestException("The specified player does not exist");
     } else if(!game.hasStarted()) {
       throw new InvalidRequestException("The game has not started yet");
+    } else if(game.getWinner() != null) {
+      throw new InvalidRequestException("The game is over");
     } else if(!game.isPlayersTurn(playerId)) {
       game.killPlayer(game.getPlayer(playerId), gameStore);
       throw new InvalidRequestException("It is not your turn");
     }
+
     game.updatePlayerLocation(game.getPlayer(playerId), x, y, gameStore);
-    JSONObject obj = new JSONObject();
-    obj.put("game", game.toJson());
-    return obj;
+
+    Flux<JSONObject> dynamicFlux = Flux.create(sink -> {
+      GameWatcher.waitForTurn(sink, gameStore, gameId, playerId);
+    });
+    return dynamicFlux;
   }
 
   @DeleteMapping

@@ -32,10 +32,7 @@ public class GamesTaskService {
     
     if (doomedIds.size() > 0) {
       log.info(String.format("Killing %d old games", doomedIds.size()));
-    } else {
-      log.info("No games to kill :(");
+      gameStore.removeGames(doomedIds);
     }
-
-    gameStore.removeGames(doomedIds);
   }
 }

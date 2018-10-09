@@ -43,25 +43,32 @@ public class Game {
     return this.id;
   }
 
+  public Player getCurrentPlayer() {
+    return this.currentPlayer;
+  }
+
+  public String getWinner() {
+    return this.winner;
+  }
+
   public void addPlayer(Player player, GameStore gameStore) {
-    if(this.players.size() == 0) {
-      this.currentPlayer = player;
-    }
     this.players.add(player);
+
     if(this.players.size() == PLAYER_LIMIT) {
       this.started = true;
 
-      /*
-      * Start the game by moving all bots and assigning the
-      * new current player.
-      * */
-      if(this.hasBotPlayer) {
+      // Choose a random player to be first
+      this.currentPlayer = this.players.get(new Random().nextInt(PLAYER_LIMIT));
+
+      // If the starting player is a bot, move them now and advance the current player
+      // TODO: Make this work with > 2 players
+      if (this.currentPlayer.isBot) {
+        BotPlayer bp = (BotPlayer) this.currentPlayer;
+        bp.move(gameStore);
+
         for(Player p : this.players) {
-          if(p.isBot) {
-            BotPlayer bp = (BotPlayer) p;
-            bp.move(gameStore);
-          } else {
-            this.currentPlayer = p;
+          if(!p.equals(player)) {
+            this.currentPlayer = player;
           }
         }
       }
@@ -70,17 +77,22 @@ public class Game {
 
   public JSONObject toJson() {
     JSONObject obj = new JSONObject();
-    JSONArray arr = new JSONArray();
     obj.put("id", this.id);
     obj.put("board", this.board);
+
+    // Add the games players
+    JSONArray arr = new JSONArray();
     for(Player p : this.players) {
       arr.add(p.toJson());
     }
     obj.put("players", arr);
+
+    // Add the current player
     if(this.currentPlayer != null) {
-      obj.put("current_player", this.currentPlayer.toJson());
+      obj.put("current_player", this.currentPlayer.toJson(true));
     }
     obj.put("winner", this.winner);
+
     return obj;
   }
 
@@ -127,14 +139,8 @@ public class Game {
   }
 
   public boolean isPlayersTurn(UUID playerId) {
-    for(Player p : this.players) {
-      if(playerId.equals(p.getId()) && p.equals(this.currentPlayer)) {
-        return true;
-      }
-    }
-    return false;
+    return this.currentPlayer != null && playerId.equals(this.currentPlayer.getId());
   }
-
 
   public void updatePlayerLocation(Player p, int x, int y, GameStore gameStore) {
     if(Math.abs(x - p.getCurrentX()) + Math.abs(y - p.getCurrentY()) > 1) {
@@ -172,11 +178,6 @@ public class Game {
     Collection<Player> alivePlayers = Collections2.filter(this.players, Player::isAlive);
     if (alivePlayers.size() == 1) {
       this.winner = Iterables.get(alivePlayers, 0).getColor();
-      // kill the game after 30 seconds
-      new java.util.Timer().schedule(
-          new KillGameTask(gameStore, this.id),
-          30000
-      );
     }
   }
 
