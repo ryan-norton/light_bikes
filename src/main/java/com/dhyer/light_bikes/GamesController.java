@@ -22,7 +22,7 @@ public class GamesController {
   @Autowired
   GameStore gameStore;
 
-  @CrossOrigin(origins = "http://localhost:3001")
+  @CrossOrigin
   @GetMapping
   public JSONObject index() {
     ArrayList<Game> games = new ArrayList(gameStore.getGames());
@@ -40,7 +40,7 @@ public class GamesController {
     return obj;
   }
 
-  @CrossOrigin(origins = "http://localhost:3001")
+  @CrossOrigin
   @GetMapping("/{gameId}")
   public JSONObject show(@PathVariable UUID gameId) {
     log.info("Requesting game ID " + gameId);
