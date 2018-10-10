@@ -31,7 +31,11 @@ public class GamesController {
 
     JSONObject obj = new JSONObject();
     JSONArray arr = new JSONArray();
-    games.forEach( g -> arr.add(g.toJson()) );
+    games.forEach( g -> {
+      if (g.hasStarted()) {
+        arr.add(g.toJson());
+      }
+    });
 
     obj.put("games", arr);
     return obj;

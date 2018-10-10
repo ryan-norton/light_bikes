@@ -76,6 +76,10 @@ public class Game {
     return this.winner;
   }
 
+  public String[][] getBoard() {
+    return board;
+  }
+
   public JSONObject toJson() {
     JSONObject obj = new JSONObject();
     obj.put("id", this.id);
@@ -98,6 +102,8 @@ public class Game {
   }
 
   public Player addPlayer(String name, GameStore gameStore) {
+    refreshLastUpdated();
+
     synchronized(playerLock) {
       String color = getAvailableColor();
       Player player = new Player(
@@ -174,8 +180,8 @@ public class Game {
     return this.started && this.winner == null;
   }
 
-  public String[][] getBoard() {
-    return board;
+  public void refreshLastUpdated() {
+    this.lastUpdated = LocalTime.now();
   }
 
   public boolean isPlayersTurn(UUID playerId) {
@@ -183,6 +189,8 @@ public class Game {
   }
 
   public void updatePlayerLocation(Player p, int x, int y, GameStore gameStore) {
+    refreshLastUpdated();
+
     if(Math.abs(x - p.getCurrentX()) + Math.abs(y - p.getCurrentY()) > 1) {
       killPlayer(p, gameStore);
       throw new InvalidRequestException("You can only move a maximum of 1 space per turn");
