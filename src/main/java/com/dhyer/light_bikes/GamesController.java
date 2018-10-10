@@ -130,18 +130,24 @@ public class GamesController {
     Game game = gameStore.findById(gameId);
     if(game == null) {
       throw new ResourceNotFoundException("Game not found with id " + gameId);
-    } else if(!game.hasPlayer(playerId)) {
-      throw new InvalidRequestException("The specified player does not exist");
     } else if(!game.hasStarted()) {
       throw new InvalidRequestException("The game has not started yet");
     } else if(game.getWinner() != null) {
       throw new InvalidRequestException("The game is over");
+    }
+
+    Player player = game.getPlayer(playerId);
+    
+    if(player == null) {
+      throw new InvalidRequestException("The specified player does not exist");
+    } else if (!player.isAlive()) {
+      throw new InvalidRequestException("You've died, give it up");
     } else if(!game.isPlayersTurn(playerId)) {
       throw new InvalidRequestException("It is not your turn");
     }
 
     try {
-      game.updatePlayerLocation(game.getPlayer(playerId), x, y, gameStore);
+      game.updatePlayerLocation(player, x, y, gameStore);
     } finally {
       game.advanceTurn(gameStore);
     }

@@ -53,7 +53,7 @@ public class Game {
       this.hasBotPlayer = true;
 
       // Fill the game with bots, save one place
-      for (int i = 0; i < this.playerLimit; i++) {
+      for (int i = 0; i < this.playerLimit - 1; i++) {
         String color = getAvailableColor();
         Player bot = new BotPlayer(
           this,
