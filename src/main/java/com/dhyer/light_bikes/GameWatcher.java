@@ -18,7 +18,7 @@ public class GameWatcher {
   }
 
   public static class GameWatcherRunnable implements Runnable {
-    private static final int WAIT_INTERVAL = 100; // 100ms
+    private static final int WAIT_INTERVAL = 20;
     private static final int WAIT_TIMEOUT = 120000; // 120 seconds :shrug:
 
     private static final Logger log = LoggerFactory.getLogger(GameWatcherRunnable.class);

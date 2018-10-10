@@ -53,6 +53,7 @@ public class GamesTaskService {
         log.info(String.format("Killing player %s (%s) for taking too long to play their turn!", doomed.getName(), doomed.getId()));
 
         game.killPlayer(doomed, gameStore);
+        game.advanceTurn(gameStore);
       }
     }
   }

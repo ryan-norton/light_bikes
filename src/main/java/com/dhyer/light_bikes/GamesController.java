@@ -59,16 +59,25 @@ public class GamesController {
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public JSONObject create(
-      @RequestParam(value = "test", required = false, defaultValue = "false") boolean test
+      @RequestParam(value = "test", required = false, defaultValue = "false") boolean test,
+      @RequestParam(value = "numPlayers", required = false, defaultValue = "2") int numPlayers
   ) {
-    Game game = new Game(test, gameStore);
+    Game game = new Game(numPlayers, test, gameStore);
     gameStore.addGame(game);
     JSONObject obj = new JSONObject();
 
     if (test) {
-      log.info("Created game against test bot with ID " + game.getId());
+      log.info(String.format(
+        "Created game for %d players against test bot(s) with ID %s",
+        numPlayers,
+        game.getId()
+      ));
     } else {
-      log.info("Created game with ID " + game.getId());
+      log.info(String.format(
+        "Created game for %d players with ID %s",
+        numPlayers,
+        game.getId()
+      ));
     }
 
     obj.put("id", game.getId());
@@ -122,11 +131,14 @@ public class GamesController {
     } else if(game.getWinner() != null) {
       throw new InvalidRequestException("The game is over");
     } else if(!game.isPlayersTurn(playerId)) {
-      game.killPlayer(game.getPlayer(playerId), gameStore);
       throw new InvalidRequestException("It is not your turn");
     }
 
-    game.updatePlayerLocation(game.getPlayer(playerId), x, y, gameStore);
+    try {
+      game.updatePlayerLocation(game.getPlayer(playerId), x, y, gameStore);
+    } finally {
+      game.advanceTurn(gameStore);
+    }
 
     Flux<JSONObject> dynamicFlux = Flux.create(sink -> {
       GameWatcher.waitForTurn(sink, gameStore, gameId, playerId);

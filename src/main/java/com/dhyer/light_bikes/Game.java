@@ -16,11 +16,11 @@ public class Game {
   public static final int BOARD_SIZE = 25;
   public static final int TURN_TIME_LIMIT_MS = 5000;
 
-  private static final int PLAYER_LIMIT = 2;
   private static final String[] COLORS = {"red", "blue", "green", "yellow"};
 
   private UUID id;
   private String[][] board;
+  private int playerLimit;
   private ArrayList<Player> players;
   private Player currentPlayer;
   private boolean started;
@@ -35,9 +35,10 @@ public class Game {
 
   private final Object playerLock = new Object();
 
-  Game(boolean isTest, GameStore gameStore) {
+  Game(int playersCount, boolean isTest, GameStore gameStore) {
     this.id = UUID.randomUUID();
     this.board = new String[BOARD_SIZE][BOARD_SIZE];
+    this.playerLimit = playersCount;
     this.players = new ArrayList<>();
     this.startingPoints = new ArrayList<>();
     this.started = false;
@@ -47,16 +48,20 @@ public class Game {
 
     generateStartingPoints();
 
-    if(isTest) {
-      String color = getAvailableColor();
-      Player bot = new BotPlayer(
-        this,
-        color,
-        getAvailableStartingPoint(color)
-      );
-
-      this.players.add(bot);
+    if (isTest) {
       this.hasBotPlayer = true;
+
+      // Fill the game with bots, save one place
+      for (int i = 0; i < this.playerLimit; i++) {
+        String color = getAvailableColor();
+        Player bot = new BotPlayer(
+          this,
+          color,
+          getAvailableStartingPoint(color)
+        );
+
+        this.players.add(bot);
+      }
     }
   }
 
@@ -115,23 +120,16 @@ public class Game {
 
       this.players.add(player);
 
-      if(this.players.size() == PLAYER_LIMIT) {
+      if(this.players.size() == this.playerLimit) {
         this.started = true;
 
         // Choose a random player to be first
-        this.currentPlayer = this.players.get(new Random().nextInt(PLAYER_LIMIT));
+        this.currentPlayer = this.players.get(new Random().nextInt(this.playerLimit));
 
-        // If the starting player is a bot, move them now and advance the current player
-        // TODO: Make this work with > 2 players
+        // If the starting player is a bot, move them now and advance to the external player
         if (this.currentPlayer.isBot) {
-          BotPlayer bp = (BotPlayer) this.currentPlayer;
-          bp.move(gameStore);
-
-          for(Player p : this.players) {
-            if(!p.equals(player)) {
-              this.currentPlayer = player;
-            }
-          }
+          ((BotPlayer)this.currentPlayer).move(gameStore);
+          advanceTurn(gameStore);
         }
       }
 
@@ -203,17 +201,29 @@ public class Game {
       killPlayer(p, gameStore);
     } else {
       p.updateCurrentLocation(x, y);
-      // TODO: this won't work if there are more than 2 players in a game
-      for(Player player : this.players) {
-        // move all bots, pick next currentPlayer
-        if(player.isBot) {
-          BotPlayer bp = (BotPlayer) player;
-          bp.move(gameStore);
-        } else if(!p.equals(player)) {
-          this.currentPlayer = player;
-        }
-      }
     }
+  }
+
+  public void advanceTurn(GameStore gameStore) {
+    Player lastActive = this.currentPlayer;
+
+    do {
+      this.currentPlayer = getNextPlayer();
+
+      if (this.currentPlayer.isBot) {
+        ((BotPlayer)this.currentPlayer).move(gameStore);
+      }
+    } while (
+      this.currentPlayer != lastActive &&
+        (this.currentPlayer.isBot || !this.currentPlayer.isAlive())
+    );
+  }
+
+  public Player getNextPlayer() {
+    int currentIndex = this.players.indexOf(this.currentPlayer);
+    int nextIndex = currentIndex == this.players.size() - 1 ? 0 : currentIndex + 1;
+
+    return this.players.get(nextIndex);
   }
 
   public void updateBoard(int x, int y, String color) {
