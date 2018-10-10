@@ -1,0 +1,11 @@
+version: '2'
+services:
+  server:
+    build: .
+    ports:
+      - "8080"
+    environment:
+      PORT: 8080
+      VIRTUAL_HOST: light-bikes.docker
+      VIRTUAL_PORT: 8080
+      UI_CORS_URL: localhost:3001

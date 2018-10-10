@@ -1,0 +1,10 @@
+app:
+  environment: edge
+  vpc_cluster: inseng-dev
+  region: us-west-2
+  users:
+    cloudgate-ci:
+      ssh: true
+  env_vars:
+    UI_CORS_URL: http://localhost:3001
+
