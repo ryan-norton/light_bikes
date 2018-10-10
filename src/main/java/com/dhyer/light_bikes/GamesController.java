@@ -62,6 +62,12 @@ public class GamesController {
       @RequestParam(value = "test", required = false, defaultValue = "false") boolean test,
       @RequestParam(value = "numPlayers", required = false, defaultValue = "2") int numPlayers
   ) {
+    if (numPlayers < 2 || numPlayers > Game.MAX_PLAYERS) {
+      throw new InvalidRequestException(String.format(
+        "Invalid numPlayers! Must be between 2 and %d", Game.MAX_PLAYERS
+      ));
+    }
+
     Game game = new Game(numPlayers, test, gameStore);
     gameStore.addGame(game);
     JSONObject obj = new JSONObject();

@@ -14,6 +14,7 @@ import java.time.temporal.*;
 
 public class Game {
   public static final int BOARD_SIZE = 25;
+  public static final int MAX_PLAYERS = 4;
   public static final int TURN_TIME_LIMIT_MS = 5000;
 
   private static final String[] COLORS = {"red", "blue", "green", "yellow"};
