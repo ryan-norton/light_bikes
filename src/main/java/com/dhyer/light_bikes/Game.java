@@ -265,7 +265,7 @@ public class Game {
     int halfLength = length / 2;
 
     startingPoints.clear();
-    switch (new Random().nextInt(2)) {
+    switch (new Random().nextInt(3)) {
       // Corners
       case 0:
         startingPoints.add(new Point(0, 0));
