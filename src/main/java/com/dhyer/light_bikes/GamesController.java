@@ -1,7 +1,7 @@
 package com.dhyer.light_bikes;
 
-import java.awt.*;
 import java.util.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.json.simple.JSONArray;
@@ -9,7 +9,6 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.*;
 import reactor.core.publisher.*;
 
 import java.util.UUID;
@@ -60,7 +59,7 @@ public class GamesController {
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public JSONObject create(
-      @RequestParam(value = "test", required = false, defaultValue = "false") boolean test,
+      @RequestParam(value = "addServerBot", required = false, defaultValue = "false") boolean addServerBot,
       @RequestParam(value = "boardSize", required = false, defaultValue = "0") int boardSize,
       @RequestParam(value = "numPlayers", required = false, defaultValue = "2") int numPlayers
   ) {
@@ -84,11 +83,11 @@ public class GamesController {
       ));
     }
 
-    Game game = new Game(boardSize, numPlayers, test, gameStore);
+    Game game = new Game(boardSize, numPlayers, addServerBot, gameStore);
     gameStore.addGame(game);
     JSONObject obj = new JSONObject();
 
-    if (test) {
+    if (addServerBot) {
       log.info(String.format(
         "Created game for %d players on a %d length board against test bot(s) with ID %s",
         numPlayers,
@@ -178,7 +177,12 @@ public class GamesController {
 
   @DeleteMapping
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void clearGames() {
+  public void clearGames(
+      @RequestParam("token") String token
+  ) {
+    if(!token.equals("foobar")) {
+      throw new InvalidRequestException("Unauthorized");
+    }
     log.info("Clearing all games!!!");
 
     gameStore.clear();

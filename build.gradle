@@ -3,7 +3,8 @@ buildscript {
     commonsLangVersion = '3.7'
     guavaVersion = '25.1-jre'
     jsonSimpleVersion = '1.1.1'
-		springBootVersion = '2.0.3.RELEASE'
+    springBootVersion = '2.0.3.RELEASE'
+    springFoxVersion = '2.9.2'
 	}
 	repositories {
 		mavenCentral()
@@ -36,6 +37,8 @@ repositories {
 dependencies {
   compile("com.google.guava:guava:$guavaVersion")
   compile("com.googlecode.json-simple:json-simple:$jsonSimpleVersion")
+  compile("io.springfox:springfox-swagger2:$springFoxVersion")
+  compile("io.springfox:springfox-swagger-ui:$springFoxVersion")
   compile("org.apache.commons:commons-lang3:$commonsLangVersion")
 	compile('org.springframework.boot:spring-boot-starter-web')
   compile('org.springframework.boot:spring-boot-starter-webflux')
