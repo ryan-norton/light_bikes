@@ -41,6 +41,7 @@ public class GamesController {
     return obj;
   }
 
+  @CrossOrigin(origins = "http://localhost:3001")
   @GetMapping("/{gameId}")
   public JSONObject show(@PathVariable UUID gameId) {
     log.info("Requesting game ID " + gameId);
