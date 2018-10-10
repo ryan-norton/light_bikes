@@ -21,4 +21,4 @@ app:
       min_size: 1
       env_vars:
         LOG_LEVEL: 'info'
-        PORT: '3223'
+        UI_CORS_URL: http://light-bikes-ui.s3-website-us-west-2.amazonaws.com/

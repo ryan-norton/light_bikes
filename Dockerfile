@@ -1,13 +1,10 @@
-FROM instructure/java:8
+FROM gradle:4.10.2-jdk8
 
 USER root
-WORKDIR /usr/src/light_bikes
 
-USER docker
+COPY . .
 
-COPY --chown=docker:docker . /usr/src/light_bikes
+CMD ./gradlew bootRun
 
 EXPOSE 8080
 EXPOSE 8443
-
-CMD ["./gradlew", "bootRun"]

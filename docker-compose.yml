@@ -8,4 +8,3 @@ services:
       PORT: 8080
       VIRTUAL_HOST: light-bikes.docker
       VIRTUAL_PORT: 8080
-      UI_CORS_URL: localhost:3001
