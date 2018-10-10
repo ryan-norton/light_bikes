@@ -21,10 +21,10 @@ public class BotPlayer extends Player {
      * case of killing the bot when it has no possible moves by forcing it
      * to take the up move.
      */
-    if(this.getCurrentX() + 1 < g.BOARD_SIZE &&
+    if(this.getCurrentX() + 1 < g.getBoardSize() &&
         b[this.getCurrentX() + 1][this.getCurrentY()] == null) {
       newX++;
-    } else if (this.getCurrentY() + 1 < g.BOARD_SIZE &&
+    } else if (this.getCurrentY() + 1 < g.getBoardSize() &&
         b[this.getCurrentX()][this.getCurrentY() + 1] == null) {
       newY++;
     } else if (this.getCurrentX() - 1 >= 0 &&

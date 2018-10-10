@@ -60,28 +60,45 @@ public class GamesController {
   @ResponseStatus(HttpStatus.CREATED)
   public JSONObject create(
       @RequestParam(value = "test", required = false, defaultValue = "false") boolean test,
+      @RequestParam(value = "boardSize", required = false, defaultValue = "0") int boardSize,
       @RequestParam(value = "numPlayers", required = false, defaultValue = "2") int numPlayers
   ) {
+    // If we weren't given a board size, set a random one that is between the min and max
+    // sizes (inclusively), but at set intervals (eg 5)
+    if (boardSize == 0) {
+      int slotSize = 5;
+      int sizeSlots = (Game.BOARD_SIZE_MAX - Game.BOARD_SIZE_MIN) / slotSize;
+      boardSize = Game.BOARD_SIZE_MIN + (new Random().nextInt(sizeSlots) * slotSize);
+    }
+
+    if (boardSize < Game.BOARD_SIZE_MIN || boardSize > Game.BOARD_SIZE_MAX) {
+      throw new InvalidRequestException(String.format(
+        "Invalid boardSize! Must be between %d and %d", Game.BOARD_SIZE_MIN, Game.BOARD_SIZE_MAX
+      ));
+    }
+
     if (numPlayers < 2 || numPlayers > Game.MAX_PLAYERS) {
       throw new InvalidRequestException(String.format(
         "Invalid numPlayers! Must be between 2 and %d", Game.MAX_PLAYERS
       ));
     }
 
-    Game game = new Game(numPlayers, test, gameStore);
+    Game game = new Game(boardSize, numPlayers, test, gameStore);
     gameStore.addGame(game);
     JSONObject obj = new JSONObject();
 
     if (test) {
       log.info(String.format(
-        "Created game for %d players against test bot(s) with ID %s",
+        "Created game for %d players on a %d length board against test bot(s) with ID %s",
         numPlayers,
+        boardSize,
         game.getId()
       ));
     } else {
       log.info(String.format(
-        "Created game for %d players with ID %s",
+        "Created game for %d players on a %d length board with ID %s",
         numPlayers,
+        boardSize,
         game.getId()
       ));
     }

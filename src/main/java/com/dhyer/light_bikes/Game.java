@@ -13,7 +13,8 @@ import java.time.*;
 import java.time.temporal.*;
 
 public class Game {
-  public static final int BOARD_SIZE = 25;
+  public static final int BOARD_SIZE_MIN = 25;
+  public static final int BOARD_SIZE_MAX = 100;
   public static final int MAX_PLAYERS = 4;
   public static final int TURN_TIME_LIMIT_MS = 5000;
 
@@ -21,6 +22,7 @@ public class Game {
 
   private UUID id;
   private String[][] board;
+  private int boardSize;
   private int playerLimit;
   private ArrayList<Player> players;
   private Player currentPlayer;
@@ -36,9 +38,10 @@ public class Game {
 
   private final Object playerLock = new Object();
 
-  Game(int playersCount, boolean isTest, GameStore gameStore) {
+  Game(int boardSize, int playersCount, boolean isTest, GameStore gameStore) {
     this.id = UUID.randomUUID();
-    this.board = new String[BOARD_SIZE][BOARD_SIZE];
+    this.boardSize = boardSize;
+    this.board = new String[this.boardSize][this.boardSize];
     this.playerLimit = playersCount;
     this.players = new ArrayList<>();
     this.startingPoints = new ArrayList<>();
@@ -80,6 +83,10 @@ public class Game {
 
   public String getWinner() {
     return this.winner;
+  }
+
+  public int getBoardSize() {
+    return this.boardSize;
   }
 
   public String[][] getBoard() {
@@ -194,7 +201,7 @@ public class Game {
       killPlayer(p, gameStore);
       throw new InvalidRequestException("You can only move a maximum of 1 space per turn");
     }
-    if (x >= BOARD_SIZE || x < 0 || y >= BOARD_SIZE || y < 0) {
+    if (x >= this.boardSize || x < 0 || y >= this.boardSize || y < 0) {
       killPlayer(p, gameStore);
       throw new InvalidRequestException("You must stay on the board");
     }
