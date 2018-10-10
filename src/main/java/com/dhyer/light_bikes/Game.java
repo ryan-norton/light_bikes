@@ -190,19 +190,26 @@ public class Game {
   public void updatePlayerLocation(Player p, int x, int y, GameStore gameStore) {
     refreshLastUpdated();
 
-    if(Math.abs(x - p.getCurrentX()) + Math.abs(y - p.getCurrentY()) > 1) {
+    if (Math.abs(x - p.getCurrentX()) + Math.abs(y - p.getCurrentY()) > 1) {
       killPlayer(p, gameStore);
       throw new InvalidRequestException("You can only move a maximum of 1 space per turn");
-    } else if(x >= BOARD_SIZE || x < 0 || y >= BOARD_SIZE || y < 0) {
+    }
+    if (x >= BOARD_SIZE || x < 0 || y >= BOARD_SIZE || y < 0) {
       killPlayer(p, gameStore);
       throw new InvalidRequestException("You must stay on the board");
     }
-
-    if(this.board[x][y] != null) {
+    if (this.board[x][y] != null) {
       killPlayer(p, gameStore);
-    } else {
-      p.updateCurrentLocation(x, y);
+      String causeOfDeath;
+      if (this.board[x][y] == p.getColor()) {
+        causeOfDeath = "You ran into your own tail";
+      } else {
+        causeOfDeath = String.format("You ran into the %s player's tail", this.board[x][y]);
+      }
+      throw new InvalidRequestException(causeOfDeath);
     }
+
+    p.updateCurrentLocation(x, y);
   }
 
   public void advanceTurn(GameStore gameStore) {
