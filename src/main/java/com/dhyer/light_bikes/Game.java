@@ -13,8 +13,8 @@ import java.time.*;
 import java.time.temporal.*;
 
 public class Game {
-  public static final int BOARD_SIZE_MIN = 25;
-  public static final int BOARD_SIZE_MAX = 50;
+  public static final int BOARD_SIZE_MIN = 15;
+  public static final int BOARD_SIZE_MAX = 30;
   public static final int MAX_PLAYERS = 4;
   public static final int TURN_TIME_LIMIT_MS = 5000;
 
@@ -229,7 +229,7 @@ public class Game {
         ((BotPlayer)this.currentPlayer).move(gameStore);
       }
     } while (
-      this.currentPlayer != lastActive &&
+      !this.currentPlayer.equals(lastActive) &&
         (this.currentPlayer.isBot || !this.currentPlayer.isAlive())
     );
   }
