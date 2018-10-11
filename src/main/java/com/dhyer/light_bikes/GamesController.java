@@ -132,7 +132,7 @@ public class GamesController {
 
   @PostMapping("/{gameId}/move")
   public Flux<JSONObject> move(@PathVariable UUID gameId,
-                         @RequestParam("id") UUID playerId,
+                         @RequestParam("playerId") UUID playerId,
                          @RequestParam("x") int x,
                          @RequestParam("y") int y) {
     log.info(
