@@ -11,12 +11,14 @@ app:
       name: Davis Hyer
       email: dhyer@instructure.com
       ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDzThPLbXvFAjXGrdd/Gq7XlyV3WIwzd7p765Mu85hsmFdl1bZpS+ws1QzKYwPKvBG7qHBK0cgWkh/IFj407C4LBcG/UBpnCVBUwAIAF7vgc7qrj2cvR9C1Zx5DqteNdorGw766kOaI+4fq9IpiWYacbtTnypPECtMhTWlKCgN91NdIgKHsQwVMn0hHa8Ntp+IDgj3+Q+CRloUFRLvUbfO+yIZh+kpE5UEvvSSVOiY/GgF8v03aWNf8CwUQi6p2TRvzhbkzsM49TWQXIJWsGkPZ2tasLvYbNID1u32+h7RKg0sAhkvHXgFVLOfqO3zfPn1CVC6bIFjaPV1XgGZJVtiN dhyer@dhyer-l2.corp.instructure.com.corp.instructure.com
+  load_balancers:
+    web:
+      ssl_cert_arn: "arn:aws:acm:us-west-2:830473435438:certificate/b119c8b6-9305-4532-9798-dcfbf712158b"
   instance_pools:
     web:
       http_port: 8080
-      https_port: 8443
       health_check_path: /health-check
-      instance_type: t2.micro
+      instance_type: t2.small
       max_size: 1
       min_size: 1
       env_vars:
