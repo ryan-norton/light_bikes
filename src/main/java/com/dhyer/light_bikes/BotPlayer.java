@@ -107,5 +107,17 @@ public abstract class BotPlayer extends Player {
     return "same";
   }
 
+  protected int distanceToEdge(Point move) {
+    int d = 0;
+    Point diff = new Point(position.x - move.x, position.y - move.y);
+
+    do {
+      d++;
+      move.translate(diff.x, diff.y);
+    } while (allPoints.get(move) == null);
+
+    return d;
+  }
+
   protected abstract Point findBestMove();
 }

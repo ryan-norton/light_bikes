@@ -107,24 +107,10 @@ public class LevelThreeBotPlayer extends BotPlayer {
   }
 
   protected Point findFurthestEdge() {
-    int furthest = 0;
-    Point edge = null;
-
-    for (Point move : safeMoves()) {
-      int d = 0;
-      Point diff = new Point(position.x - move.x, position.y - move.y);
-
-      do {
-        d++;
-        move.translate(diff.x, diff.y);
-      } while (allPoints.get(move) == null);
-
-      if (d > furthest) {
-        edge = move;
-      }
-    }
-
-    return edge;
+    return safeMoves()
+      .stream()
+      .sorted((m1, m2) -> Integer.compare(distanceToEdge(m2), distanceToEdge(m1)))
+      .findFirst().orElse(null);
   }
 
   protected Point moveToSurvive() {
