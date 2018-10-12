@@ -61,7 +61,8 @@ public class GamesController {
   public JSONObject create(
       @RequestParam(value = "addServerBot", required = false, defaultValue = "false") boolean addServerBot,
       @RequestParam(value = "boardSize", required = false, defaultValue = "0") int boardSize,
-      @RequestParam(value = "numPlayers", required = false, defaultValue = "2") int numPlayers
+      @RequestParam(value = "numPlayers", required = false, defaultValue = "2") int numPlayers,
+      @RequestParam(value = "serverBotDifficulty", required = false, defaultValue = "1") int difficulty
   ) {
     // If we weren't given a board size, set a random one that is between the min and max
     // sizes (inclusively), but at set intervals (eg 5)
@@ -83,7 +84,7 @@ public class GamesController {
       ));
     }
 
-    Game game = new Game(boardSize, numPlayers, addServerBot, gameStore);
+    Game game = new Game(boardSize, numPlayers, addServerBot, difficulty);
     gameStore.addGame(game);
     JSONObject obj = new JSONObject();
 

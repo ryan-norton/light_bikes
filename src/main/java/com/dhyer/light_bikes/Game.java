@@ -3,7 +3,6 @@ package com.dhyer.light_bikes;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
-import org.apache.commons.lang3.ArrayUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -38,7 +37,7 @@ public class Game {
 
   private final Object playerLock = new Object();
 
-  Game(int boardSize, int playersCount, boolean isTest, GameStore gameStore) {
+  Game(int boardSize, int playersCount, boolean isTest, int difficulty) {
     this.id = UUID.randomUUID();
     this.boardSize = boardSize;
     this.board = new String[this.boardSize][this.boardSize];
@@ -58,13 +57,10 @@ public class Game {
       // Fill the game with bots, save one place
       for (int i = 0; i < this.playerLimit - 1; i++) {
         String color = getAvailableColor();
-        Player bot = new BotPlayer(
-          this,
-          color,
-          getAvailableStartingPoint(color)
-        );
 
-        this.players.add(bot);
+        this.players.add(
+            BotFactory.generateBot(difficulty, this, color, getAvailableStartingPoint(color))
+        );
       }
     }
   }
@@ -208,7 +204,7 @@ public class Game {
     if (this.board[x][y] != null) {
       killPlayer(p, gameStore);
       String causeOfDeath;
-      if (this.board[x][y] == p.getColor()) {
+      if (this.board[x][y].equals(p.getColor())) {
         causeOfDeath = "You ran into your own tail";
       } else {
         causeOfDeath = String.format("You ran into the %s player's tail", this.board[x][y]);
