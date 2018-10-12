@@ -11,7 +11,10 @@ public class LevelThreeBotPlayer extends BotPlayer {
   protected String objective = "get_to_center";
 
   LevelThreeBotPlayer(Game game, String color, Point p) {
-    super(game, color, p, "Bot Level 3");
+    this(game, color, p, "Bot Level 3");
+  }
+  LevelThreeBotPlayer(Game game, String color, Point p, String name) {
+    super(game, color, p, name);
 
     int half = game.getBoard().length / 2;
     this.centerPoint = new Point(half, half);
