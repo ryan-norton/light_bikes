@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class EasyBotPlayer extends BotPlayer {
   EasyBotPlayer(Game game, String color, Point p) {
-    super(game, color, p, "Easy Bot");
+    super(game, color, p, "Bot Level 1");
   }
 
   public void move(GameStore gameStore) {

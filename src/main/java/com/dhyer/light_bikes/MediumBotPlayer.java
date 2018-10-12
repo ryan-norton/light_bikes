@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class MediumBotPlayer extends BotPlayer {
   MediumBotPlayer(Game game, String color, Point p) {
-    super(game, color, p, "Medium Bot");
+    super(game, color, p, "Bot Level 2");
   }
 
   public void move(GameStore gameStore) {
