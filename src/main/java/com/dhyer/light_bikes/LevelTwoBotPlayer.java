@@ -3,12 +3,12 @@ package com.dhyer.light_bikes;
 import java.awt.*;
 import java.util.HashMap;
 
-public class MediumBotPlayer extends BotPlayer {
-  MediumBotPlayer(Game game, String color, Point p) {
+public class LevelTwoBotPlayer extends BotPlayer {
+  LevelTwoBotPlayer(Game game, String color, Point p) {
     super(game, color, p, "Bot Level 2");
   }
 
-  public void move(GameStore gameStore) {
+  protected Point findBestMove() {
     Game g = this.getGame();
     String[][] b = g.getBoard();
     int currentX = this.getCurrentX();
@@ -59,10 +59,6 @@ public class MediumBotPlayer extends BotPlayer {
                   break;
     }
 
-    if(p.x >= b.length || p.x < 0 || p.y >= b.length || p.y < 0 || b[p.x][p.y] != null) {
-      g.killPlayer(this, gameStore);
-    } else {
-      this.updateCurrentLocation(p.x, p.y);
-    }
+    return p;
   }
 }

@@ -23,7 +23,7 @@ public class Game {
   private String[][] board;
   private int boardSize;
   private int playerLimit;
-  private ArrayList<Player> players;
+  public ArrayList<Player> players;
   private Player currentPlayer;
   private boolean started;
   private String winner;

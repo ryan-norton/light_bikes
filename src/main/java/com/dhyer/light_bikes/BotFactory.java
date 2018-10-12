@@ -6,8 +6,9 @@ public class BotFactory {
 
   public static Player generateBot(int level, Game game, String color, Point point) {
     switch(level) {
-      case 2: return new MediumBotPlayer(game, color, point);
-      default: return new EasyBotPlayer(game, color, point);
+      case 3: return new LevelThreeBotPlayer(game, color, point);
+      case 2: return new LevelTwoBotPlayer(game, color, point);
+      default: return new LevelOneBotPlayer(game, color, point);
     }
   }
 }

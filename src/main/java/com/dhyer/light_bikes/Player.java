@@ -7,16 +7,16 @@ import java.awt.*;
 import java.util.UUID;
 
 public class Player {
-  private String name;
-  private boolean alive;
-  private String color;
-  private int currentX;
-  private int currentY;
+  protected String name;
+  protected boolean alive;
+  protected String color;
+  protected Point position;
+  protected Point posDiff = new Point(0,0);
 
   @JsonIgnore
-  private UUID id;
-  private Game game;
-  boolean isBot;
+  protected UUID id;
+  protected Game game;
+  public boolean isBot;
 
   Player(Game game, String name, String color, Point p) {
     this.id = UUID.randomUUID();
@@ -25,8 +25,7 @@ public class Player {
     this.alive = true;
     this.name = name;
     this.color = color;
-    this.currentX = p.x;
-    this.currentY = p.y;
+    this.position = p;
   }
 
   public UUID getId() {
@@ -47,8 +46,8 @@ public class Player {
     obj.put("name", this.name);
     obj.put("color", this.color);
     obj.put("alive", this.alive);
-    obj.put("x", this.currentX);
-    obj.put("y", this.currentY);
+    obj.put("x", this.position.x);
+    obj.put("y", this.position.y);
 
     if (includeId) {
       obj.put("id", this.id);
@@ -57,17 +56,28 @@ public class Player {
     return obj;
   }
 
+  public Point getPosition() {
+    return this.position;
+  }
+
+  public Point getPosDiff() {
+    return this.posDiff;
+  }
+
   public int getCurrentX() {
-    return this.currentX;
+    return this.position.x;
   }
 
   public int getCurrentY() {
-    return this.currentY;
+    return this.position.y;
   }
 
   public void updateCurrentLocation(int x, int y) {
-    this.currentX = x;
-    this.currentY = y;
+    this.posDiff = new Point(
+      this.position.x - x,
+      this.position.y - y
+    );
+    this.position = new Point(x, y);
 
     this.game.updateBoard(x, y, this.getColor());
   }
