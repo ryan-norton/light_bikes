@@ -12,8 +12,8 @@ import java.time.*;
 import java.time.temporal.*;
 
 public class Game {
-  public static final int BOARD_SIZE_MIN = 15;
-  public static final int BOARD_SIZE_MAX = 30;
+  public static final int BOARD_SIZE_MIN = 20;
+  public static final int BOARD_SIZE_MAX = 40;
   public static final int MAX_PLAYERS = 4;
   public static final int TURN_TIME_LIMIT_MS = 5000;
 

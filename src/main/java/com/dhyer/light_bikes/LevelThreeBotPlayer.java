@@ -39,12 +39,12 @@ public class LevelThreeBotPlayer extends BotPlayer {
       }
     }
 
-    if (this.objective == "get_to_edge") {
-      move = moveToFurthestEdge();
-      if (move == null) {
-        this.objective = "survive";
-      }
-    }
+    // if (this.objective == "get_to_edge") {
+    //   move = moveToFurthestEdge();
+    //   if (move == null) {
+    //     this.objective = "survive";
+    //   }
+    // }
 
     // YOLO!
     if (move == null) {

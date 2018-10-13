@@ -18,7 +18,7 @@ public class LevelFourBotPlayer extends LevelThreeBotPlayer {
   protected Point moveToSurvive() {
     return safeMoves()
       .stream()
-      .sorted((m1, m2) -> compareForEdgeRiding(m1, m2))
+      .sorted((m1, m2) -> compareForAreaSize(m1, m2))
       .findFirst().orElse(null);
   }
 
