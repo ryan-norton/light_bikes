@@ -8,16 +8,19 @@ import com.google.common.collect.Iterables;
 
 public abstract class BotPlayer extends Player {
   protected Map<Point, String> allPoints; 
+  protected ArrayList<ArrayList<Point>> openAreas;
 
   BotPlayer(Game game, String color, Point p, String name) {
     super(game, name, color, p);
 
     this.isBot = true;
     this.allPoints = new HashMap<>();
+    this.openAreas = new ArrayList<>();
   }
 
   public void move(GameStore gameStore) {
     updateAllPoints();
+    updateOpenAreas();
     Point move = findBestMove();
 
     // check if the bot has died, otherwise make the move
@@ -43,6 +46,50 @@ public abstract class BotPlayer extends Player {
         this.allPoints.put(new Point(x,y), b[x][y]);
       }
     }
+  }
+
+  protected void updateOpenAreas() {
+    int length = getGame().getBoard().length;
+    Map<Point, String> visited = new HashMap<>();
+
+    openAreas.clear();
+
+    for (int x = 0; x < length; x++) {
+      for (int y = 0; y < length; y++) {
+        Point p = new Point(x, y);
+
+        if (allPoints.get(p) == null && visited.get(p) == null) {
+          openAreas.add(deepSearch(p, visited));
+        }
+      }
+    }
+  }
+
+  protected ArrayList<Point> deepSearch(Point point, Map<Point, String> visited) {
+    ArrayList<Point> area = new ArrayList<>();
+    area.add(point);
+    visited.put(point, "Y");
+
+    int[] rowNbr = {-1, -1, -1, 0, 0, 1, 1, 1};
+    int[] colNbr = {-1, 0, 1, -1, 1, -1, 0, 1};
+
+    for (int k = 0; k < 8; k++) {
+      Point p = new Point(point.x + rowNbr[k], point.y + colNbr[k]);
+      if (allPoints.containsKey(p) && allPoints.get(p) == null && visited.get(p) == null) {
+        area.addAll(deepSearch(p, visited));
+      }
+    }
+
+    return area;
+  }
+
+  protected int areaSizeFor(Point move) {
+    ArrayList<Point> area = openAreas
+      .stream()
+      .filter(a -> a.contains(move))
+      .findFirst().orElse(null);
+
+    return area == null ? 0 : area.size();
   }
 
   protected ArrayList<Point> safeMoves() { return safeMoves(false); }
