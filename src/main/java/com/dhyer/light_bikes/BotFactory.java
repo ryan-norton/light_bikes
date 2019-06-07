@@ -5,10 +5,11 @@ import java.awt.*;
 public class BotFactory {
 
   public static Player generateBot(int level, Game game, String color, Point point) {
-    level = Math.min(level, 4);
+    level = Math.min(level, 5);
     level = Math.max(level, 1);
 
     switch(level) {
+      case 5: return new LevelFiveBotPlayer(game, color, point);
       case 4: return new LevelFourBotPlayer(game, color, point);
       case 3: return new LevelThreeBotPlayer(game, color, point);
       case 2: return new LevelTwoBotPlayer(game, color, point);

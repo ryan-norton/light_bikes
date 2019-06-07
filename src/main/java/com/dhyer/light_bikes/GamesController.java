@@ -155,7 +155,7 @@ public class GamesController {
     }
 
     Player player = game.getPlayer(playerId);
-    
+
     if(player == null) {
       throw new InvalidRequestException("The specified player does not exist");
     } else if (!player.isAlive()) {
