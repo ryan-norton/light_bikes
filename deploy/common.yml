@@ -1,5 +1,5 @@
 cloudgate:
-  required_version: '~> 8.0.0'
+  required_version: '~> 8.1.0'
 app:
   name: light-bikes
   users:
