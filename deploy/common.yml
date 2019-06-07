@@ -1,5 +1,5 @@
 cloudgate:
-  required_version: '~> 7.0.0'
+  required_version: '~> 8.0.0'
 app:
   name: light-bikes
   users:
@@ -11,6 +11,10 @@ app:
       name: Davis Hyer
       email: dhyer@instructure.com
       ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDzThPLbXvFAjXGrdd/Gq7XlyV3WIwzd7p765Mu85hsmFdl1bZpS+ws1QzKYwPKvBG7qHBK0cgWkh/IFj407C4LBcG/UBpnCVBUwAIAF7vgc7qrj2cvR9C1Zx5DqteNdorGw766kOaI+4fq9IpiWYacbtTnypPECtMhTWlKCgN91NdIgKHsQwVMn0hHa8Ntp+IDgj3+Q+CRloUFRLvUbfO+yIZh+kpE5UEvvSSVOiY/GgF8v03aWNf8CwUQi6p2TRvzhbkzsM49TWQXIJWsGkPZ2tasLvYbNID1u32+h7RKg0sAhkvHXgFVLOfqO3zfPn1CVC6bIFjaPV1XgGZJVtiN dhyer@dhyer-l2.corp.instructure.com.corp.instructure.com
+    jle:
+      name: Johnny Le
+      email: jle@instructure.com
+      ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCW6jhQmSj8ZUM8F4WEtHTlWM6NuC4XWyxZKligXe6PEj3sE+PfaIbMdxn0txHhLkyFvsXBiUv1poGSK4c7jVuepdUSVdm8KPo9sHqKomwgBmjiMDLWdzhD0RvLZEP+Z/QMPB4V+/UyA/l2bm+Yu0Vw4KnJzvr/Di5uWqmO2YZ4QVrr+VReHWn51Zzo67vgB56uJUaHC509eoAKXNmQSX7M79hr6rlpzuajOnDP6Lj39aXHaCZrgqMH5ySDURzZq4Vmtkjw9Q/oNhKe0+mCxrE8GUoVcvAY5y6TZlI6vRrRF/0VWUw2arWSPhussJSeAXDyBYQsH+RZypizu5A1+JqP jle@jle-l.corp.instructure.com.corp.instructure.com
   load_balancers:
     web:
       ssl_cert_arn: "arn:aws:acm:us-west-2:830473435438:certificate/b119c8b6-9305-4532-9798-dcfbf712158b"
