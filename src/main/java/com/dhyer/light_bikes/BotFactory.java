@@ -9,7 +9,7 @@ public class BotFactory {
     level = Math.max(level, 1);
 
     switch(level) {
-      case 5: return new LevelFiveBotPlayer(game, color, point);
+      // case 5: return new LevelFiveBotPlayer(game, color, point);
       case 4: return new LevelFourBotPlayer(game, color, point);
       case 3: return new LevelThreeBotPlayer(game, color, point);
       case 2: return new LevelTwoBotPlayer(game, color, point);
