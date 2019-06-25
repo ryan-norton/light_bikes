@@ -7,7 +7,7 @@
 1. Load your inseng credentials
    `vaulted shell <inseng>`
 1. Log in to Starlord (https://starlord.inscloudgate.net/)
-   `docker login -u dhyer -p ... starlord.inscloudgate.net`
+   `docker login -u <username> -p ... starlord.inscloudgate.net`
 1. Build (tag should be the sha of master)
    `cg build -e edge -t <tag>`
 1. Deploy
