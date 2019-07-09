@@ -23,6 +23,8 @@ public class LevelFourBotPlayer extends LevelThreeBotPlayer {
   }
 
   protected int compareForAreaSize(Point m1, Point m2) {
+    updateOpenAreas();
+
     int size1 = areaSizeFor(m1);
     int size2 = areaSizeFor(m2);
 

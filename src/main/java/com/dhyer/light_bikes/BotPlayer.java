@@ -20,7 +20,6 @@ public abstract class BotPlayer extends Player {
 
   public void move(GameStore gameStore) {
     updateAllPoints();
-    updateOpenAreas();
     Point move = findBestMove();
 
     // check if the bot has died, otherwise make the move
