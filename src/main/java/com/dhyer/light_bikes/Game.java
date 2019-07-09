@@ -12,10 +12,12 @@ import java.time.*;
 import java.time.temporal.*;
 
 public class Game {
-  public static final int BOARD_SIZE_MIN = 20;
-  public static final int BOARD_SIZE_MAX = 40;
+  public static final int BOARD_SIZE_MIN = 30;
+  public static final int BOARD_SIZE_MAX = 60;
   public static final int MAX_PLAYERS = 4;
   public static final int TURN_TIME_LIMIT_MS = 5000;
+  public static final int STARTED_GAME_EXPIRES_IN_MS = 30000;
+  public static final int UNSTARTED_GAME_EXPIRES_IN_MS = 120000;
 
   private static final String[] COLORS = {"red", "blue", "green", "yellow"};
 
@@ -251,7 +253,7 @@ public class Game {
   }
 
   public boolean hasExpired() {
-    int expirationPeriod = this.started ? 30 : 120;
+    int expirationPeriod = this.started ?  STARTED_GAME_EXPIRES_IN_MS : UNSTARTED_GAME_EXPIRES_IN_MS;
     return this.lastUpdated
       .plusSeconds(expirationPeriod)
       .isBefore(LocalTime.now());
