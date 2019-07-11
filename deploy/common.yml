@@ -22,7 +22,7 @@ app:
     web:
       http_port: 8080
       health_check_path: /health-check
-      instance_type: t2.small
+      instance_type: m5.4xlarge
       max_size: 1
       min_size: 1
       env_vars:

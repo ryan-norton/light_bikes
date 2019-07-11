@@ -181,7 +181,7 @@ public class GamesController {
   public void clearGames(
       @RequestParam("token") String token
   ) {
-    if(!token.equals("foobar")) {
+    if(!token.equals("NWxcj^FS%li]O%B")) {
       throw new InvalidRequestException("Unauthorized");
     }
     log.info("Clearing all games!!!");
