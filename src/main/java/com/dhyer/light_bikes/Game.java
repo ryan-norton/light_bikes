@@ -16,8 +16,8 @@ public class Game {
   public static final int BOARD_SIZE_MAX = 60;
   public static final int MAX_PLAYERS = 4;
   public static final int TURN_TIME_LIMIT_MS = 5000;
-  public static final int STARTED_GAME_EXPIRES_IN_MS = 30000;
-  public static final int UNSTARTED_GAME_EXPIRES_IN_MS = 120000;
+  public static final int STARTED_GAME_EXPIRES_IN_SEC = 30;
+  public static final int UNSTARTED_GAME_EXPIRES_IN_SEC = 120;
 
   private static final String[] COLORS = {"red", "blue", "green", "yellow"};
 
@@ -253,7 +253,7 @@ public class Game {
   }
 
   public boolean hasExpired() {
-    int expirationPeriod = this.started ?  STARTED_GAME_EXPIRES_IN_MS : UNSTARTED_GAME_EXPIRES_IN_MS;
+    int expirationPeriod = this.started ?  STARTED_GAME_EXPIRES_IN_SEC : UNSTARTED_GAME_EXPIRES_IN_SEC;
     return this.lastUpdated
       .plusSeconds(expirationPeriod)
       .isBefore(LocalTime.now());
