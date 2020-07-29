@@ -15,6 +15,10 @@ app:
       name: Johnny Le
       email: jle@instructure.com
       ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCW6jhQmSj8ZUM8F4WEtHTlWM6NuC4XWyxZKligXe6PEj3sE+PfaIbMdxn0txHhLkyFvsXBiUv1poGSK4c7jVuepdUSVdm8KPo9sHqKomwgBmjiMDLWdzhD0RvLZEP+Z/QMPB4V+/UyA/l2bm+Yu0Vw4KnJzvr/Di5uWqmO2YZ4QVrr+VReHWn51Zzo67vgB56uJUaHC509eoAKXNmQSX7M79hr6rlpzuajOnDP6Lj39aXHaCZrgqMH5ySDURzZq4Vmtkjw9Q/oNhKe0+mCxrE8GUoVcvAY5y6TZlI6vRrRF/0VWUw2arWSPhussJSeAXDyBYQsH+RZypizu5A1+JqP jle@jle-l.corp.instructure.com.corp.instructure.com
+    bnelson:
+      name: Ben Nelson
+      email: bnelson@instructure.com
+      ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC51OKo8bFL/Ny2GRjkh6KcRrjcQCyBqH3On/SGL8H0yNCBLWqayrwCU06t+OfhfsT1bOs+rAc4M9yCbOjlTTeRQHZDfySkRYVpAQkEB2e6ypIvBXAhvnLYXTI/IcKZg4ODxFDFaNOyr2w/kw6MbAKkalbhLcy06myYBUzJmheDkSY8UVYXj1gnc6ZBMHpBV1JU4b8+s1c/79S4yqvNWbUBRB8fjaTK4CjC8Ycy1o+tPuEPd+3YLdTDOlv3oWCyqZ7bsOMUIjMBt5jcVNO2F5s9NLXw89FKfwipHrBmso66BV48NB9wFcCwsrfBBzRjs2h691zMjgpnRMCXXv+H/GxRFOdtvKVOcsU5S03XamaPMNa11SbO7LxUjnIxks2qTk+Pjj6nkza7JFfgW7BZ8iuNVpnrvDjVNjBiyYXzUuGOk2geLvajG05INZcjMnxRK1JjJ0FsSFOatyFwaaMT/6lws1NtF8Z6ibZu/1Ozg0WmvqwPM3okNVXck1oLdGJD4yc= bnelson@c02zc2wblvdr.corp.instructure.com
   load_balancers:
     web:
       ssl_cert_arn: "arn:aws:acm:us-west-2:830473435438:certificate/b119c8b6-9305-4532-9798-dcfbf712158b"
