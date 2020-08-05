@@ -42,7 +42,7 @@ public class GamesController {
 
   @CrossOrigin
   @GetMapping("/{gameId}")
-  public JSONObject show(@PathVariable UUID gameId) {
+  public JSONObject show(@PathVariable int gameId) {
     log.info("Requesting game ID " + gameId);
 
     Game game = gameStore.findById(gameId);
@@ -109,7 +109,7 @@ public class GamesController {
   }
 
   @PostMapping("/{gameId}/join")
-  public Flux<JSONObject> joinGame(@PathVariable UUID gameId,
+  public Flux<JSONObject> joinGame(@PathVariable int gameId,
                              @RequestParam(required = true) String name) {
     log.info(name + " is joining game " + gameId);
 
@@ -132,7 +132,7 @@ public class GamesController {
   }
 
   @PostMapping("/{gameId}/move")
-  public Flux<JSONObject> move(@PathVariable UUID gameId,
+  public Flux<JSONObject> move(@PathVariable int gameId,
                          @RequestParam("playerId") UUID playerId,
                          @RequestParam("x") int x,
                          @RequestParam("y") int y) {

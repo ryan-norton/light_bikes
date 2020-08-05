@@ -23,13 +23,13 @@ public class GamesTaskService {
   // been updated in 120 seconds
   @Scheduled(fixedDelay = 10000)
   public void killOldGames() {
-    Collection<UUID> doomedIds = gameStore
+    Collection<Integer> doomedIds = gameStore
       .getGames()
       .stream()
       .filter(g -> g.hasExpired())
       .map(g -> g.getId())
       .collect(toList());
-    
+
     if (doomedIds.size() > 0) {
       log.info(String.format("Killing %d old games", doomedIds.size()));
       gameStore.removeGames(doomedIds);

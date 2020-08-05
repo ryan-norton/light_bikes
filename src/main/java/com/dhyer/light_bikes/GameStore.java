@@ -3,7 +3,7 @@ package com.dhyer.light_bikes;
 import java.util.*;
 
 public class GameStore {
-  private Map<UUID, Game> games;
+  private Map<Integer, Game> games;
   private final Object lock = new Object();
 
   GameStore() {
@@ -16,7 +16,7 @@ public class GameStore {
     }
   }
 
-  public Game findById(UUID id) {
+  public Game findById(int id) {
     synchronized(lock) {
       return this.games.get(id);
     }
@@ -28,13 +28,13 @@ public class GameStore {
     }
   }
 
-  public void removeGame(UUID id) {
+  public void removeGame(int id) {
     synchronized(lock) {
       this.games.remove(id);
     }
   }
 
-  public void removeGames(Collection<UUID> ids) {
+  public void removeGames(Collection<Integer> ids) {
     synchronized(lock) {
       ids.forEach(id -> this.games.remove(id));
     }

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 public class GameWatcher {
   private GameWatcher() {}
 
-  public static void waitForTurn(FluxSink<JSONObject> sink, GameStore gameStore, UUID gameId, UUID playerId) {
+  public static void waitForTurn(FluxSink<JSONObject> sink, GameStore gameStore, int gameId, UUID playerId) {
     GameWatcherRunnable runnable = new GameWatcherRunnable(sink, gameStore, gameId, playerId);
     Thread t = new Thread(runnable);
     t.start();
@@ -25,10 +25,10 @@ public class GameWatcher {
 
     private FluxSink<JSONObject> sink;
     private GameStore gameStore;
-    private UUID gameId;
+    private int gameId;
     private UUID playerId;
 
-    public GameWatcherRunnable(FluxSink<JSONObject> sink, GameStore gameStore, UUID gameId, UUID playerId) {
+    public GameWatcherRunnable(FluxSink<JSONObject> sink, GameStore gameStore, int gameId, UUID playerId) {
       this.sink = sink;
       this.gameId = gameId;
       this.playerId = playerId;
@@ -47,7 +47,7 @@ public class GameWatcher {
             sink.error(new InvalidRequestException("The game has gone missing :scream:"));
             break;
           }
-          
+
           if (game.isPlayersTurn(playerId) || game.getWinner() != null) {
             sink.next(game.toJson());
             break;
