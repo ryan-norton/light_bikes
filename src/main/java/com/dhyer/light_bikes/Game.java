@@ -8,6 +8,7 @@ import org.json.simple.JSONObject;
 
 import java.awt.*;
 import java.util.*;
+import java.util.concurrent.atomic.*;
 import java.time.*;
 import java.time.temporal.*;
 
@@ -18,10 +19,11 @@ public class Game {
   public static final int TURN_TIME_LIMIT_MS = 5000;
   public static final int STARTED_GAME_EXPIRES_IN_SEC = 30;
   public static final int UNSTARTED_GAME_EXPIRES_IN_SEC = 120;
+  public static final AtomicInteger COUNT = new AtomicInteger(0);
 
   private static final String[] COLORS = {"red", "blue", "green", "yellow"};
 
-  private UUID id;
+  private int id;
   private String[][] board;
   private int boardSize;
   private int playerLimit;
@@ -40,7 +42,7 @@ public class Game {
   private final Object playerLock = new Object();
 
   Game(int boardSize, int playersCount, boolean isTest, int difficulty) {
-    this.id = UUID.randomUUID();
+    this.id = COUNT.incrementAndGet();
     this.boardSize = boardSize;
     this.board = new String[this.boardSize][this.boardSize];
     this.playerLimit = playersCount;
@@ -67,7 +69,7 @@ public class Game {
     }
   }
 
-  public UUID getId() {
+  public int getId() {
     return this.id;
   }
 
@@ -295,5 +297,5 @@ public class Game {
         startingPoints.add(new Point(halfLength + 1, halfLength + 1));
         break;
     }
-  } 
+  }
 }
