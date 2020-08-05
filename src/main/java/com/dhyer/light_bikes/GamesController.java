@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.UUID;
 
@@ -176,6 +177,7 @@ public class GamesController {
     return dynamicFlux;
   }
 
+  @ApiIgnore
   @DeleteMapping
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void clearGames(
