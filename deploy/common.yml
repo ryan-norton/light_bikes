@@ -1,16 +1,10 @@
 cloudgate:
-  required_version: '~> 10.0.5'
+  required_version: '~> 11.0.1'
 app:
   name: light-bikes
   users:
-    dhyer:
-      name: Davis Hyer
-      email: dhyer@instructure.com
-      ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDzThPLbXvFAjXGrdd/Gq7XlyV3WIwzd7p765Mu85hsmFdl1bZpS+ws1QzKYwPKvBG7qHBK0cgWkh/IFj407C4LBcG/UBpnCVBUwAIAF7vgc7qrj2cvR9C1Zx5DqteNdorGw766kOaI+4fq9IpiWYacbtTnypPECtMhTWlKCgN91NdIgKHsQwVMn0hHa8Ntp+IDgj3+Q+CRloUFRLvUbfO+yIZh+kpE5UEvvSSVOiY/GgF8v03aWNf8CwUQi6p2TRvzhbkzsM49TWQXIJWsGkPZ2tasLvYbNID1u32+h7RKg0sAhkvHXgFVLOfqO3zfPn1CVC6bIFjaPV1XgGZJVtiN dhyer@dhyer-l2.corp.instructure.com.corp.instructure.com
-    rnorton:
-      name: Ryan Norton
-      email: rnorton@instructure.com
-      ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCnjhUYs8Zizl1V2TBJiapFbLW4K0WSWqa8hvb3iM7Flt/P82K529BvEAmFeHwxRQLz2mMk1f6FAzOQP6tjPPTHqQ34I2IuQB2CdBpMivrugEKY1HYE3OgEWA0tikt+9DFbqEA9aSQR45S/HhMc/8d1cebl0XVSsr0yKnOpFmXNLQqke+eFDJzVlXzcVaGQJpA6wW1aQpZQmr2KGnjfb1Xunu5fQESQoykfUA9FkqIjXoEteBmPjImZ5dt1AAOZqAgL6tSqof1GRMY/RedUsMzzAR25vPiXsb5wDCOFKyy1qKVkz8mZYkKlqo9tMcqFp7lXQsLdN4SbhNhDc8Ia8EZP
+    dhyer: {}
+    rnorton: {}
   load_balancers:
     web:
       ssl_cert_arn: "arn:aws:acm:us-west-2:830473435438:certificate/b119c8b6-9305-4532-9798-dcfbf712158b"
